@@ -1,4 +1,6 @@
-#[derive(Debug, Copy, Clone, PartialOrd, PartialEq, Default)]
-pub struct Xyz {
-    pub data: [f32; 3]
+use num_traits::Float;
+
+#[derive(Debug, Copy, Clone, PartialOrd, PartialEq, Hash, Default)]
+pub struct Xyz<T: Float = f32> {
+    pub data: [T; 3]
 }

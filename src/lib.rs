@@ -1,3 +1,5 @@
+extern crate num_traits;
+
 mod xyz;
 mod lab;
 mod rgb;
