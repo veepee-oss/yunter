@@ -1,8 +1,10 @@
 [package]
-name = "young"
+name = "yunter"
 version = "0.1.0"
-authors = ["Maxime Legendre <mlegendre@vente-privee.com>",
-           "Clément Renault <crenault@vente-privee.com>"]
+authors = [
+    "Maxime Legendre <mlegendre@vente-privee.com>",
+    "Clément Renault <crenault@vente-privee.com>"
+]
 
 [dependencies]
 num = "0.1"
