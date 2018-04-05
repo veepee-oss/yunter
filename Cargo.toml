@@ -5,4 +5,4 @@ authors = ["Maxime Legendre <mlegendre@vente-privee.com>",
            "Clément Renault <crenault@vente-privee.com>"]
 
 [dependencies]
-num-traits = "0.2"
+num = "0.1"
