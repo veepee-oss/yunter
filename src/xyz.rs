@@ -1,4 +1,4 @@
-use num::{Float, clamp};
+use num_traits::{Float, clamp};
 use rgb::Rgb;
 use lab::Lab;
 
@@ -40,9 +40,9 @@ impl<T: Float> Xyz<T> {
 
         Rgb {
             data: [
-                clamp(r, zero, max_u8).to_u8().unwrap(),
-                clamp(g, zero, max_u8).to_u8().unwrap(),
-                clamp(b, zero, max_u8).to_u8().unwrap(),
+                clamp(r * max_u8, zero, max_u8).to_u8().unwrap(),
+                clamp(g * max_u8, zero, max_u8).to_u8().unwrap(),
+                clamp(b * max_u8, zero, max_u8).to_u8().unwrap(),
             ]
         }
     }
@@ -65,6 +65,18 @@ impl<T: Float> Xyz<T> {
     }
 }
 
+impl<T: Float> From<Lab<T>> for Xyz<T> {
+    fn from(lab: Lab<T>) -> Self {
+        Xyz::from_lab(lab)
+    }
+}
+
+impl<T: Float> From<Rgb> for Xyz<T> {
+    fn from(rgb: Rgb) -> Self {
+        Xyz::from_rgb(rgb)
+    }
+}
+
 fn pivot_xyz_rgb<T: Float>(n: T) -> T {
     if n > T::from(0.0031308).unwrap() {
         T::from(1.055).unwrap() * n.powf(T::from(1.0).unwrap() / T::from(2.4).unwrap()) - T::from(0.055).unwrap()
@@ -84,5 +96,57 @@ fn pivot_xyz_lab<T: Float>(n: T) -> T {
         cubic_root(n)
     } else {
         (kappa * n + T::from(16.0).unwrap()) / T::from(116.0).unwrap()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use lab::Lab;
+    use rgb::Rgb;
+    use xyz::Xyz;
+
+    #[test]
+    fn rgb_to_xyz_simple() {
+        let rgb = Rgb { data: [50, 50, 50] };
+        let xyz: Xyz = rgb.into();
+        assert_eq!(xyz.data[0], 3.0317173);
+        assert_eq!(xyz.data[1], 3.1896026);
+        assert_eq!(xyz.data[2], 3.4734776);
+    }
+
+    #[test]
+    fn rgb_to_xyz_difficult() {
+        let rgb = Rgb { data: [43, 21, 8] };
+        let xyz: Xyz = rgb.into();
+        assert_eq!(xyz.data[0], 1.3082554);
+        assert_eq!(xyz.data[1], 1.0674537);
+        assert_eq!(xyz.data[2], 0.3668146);
+    }
+
+    #[test]
+    fn xyz_to_rgb_simple() {
+        let xyz = Xyz { data: [33.113681223365006, 15.997065707552856, 50.057654344067586] };
+        let rgb: Rgb = xyz.into();
+        assert_eq!(rgb.data[0], 200);
+        assert_eq!(rgb.data[1], 0);
+        assert_eq!(rgb.data[2], 190);
+    }
+
+    #[test]
+    fn xyz_to_lab_simple() {
+        let xyz = Xyz { data: [33.113681223365006, 15.997065707552856, 50.057654344067586] };
+        let lab: Lab = xyz.into();
+        assert_eq!(lab.l, 46.97064);
+        assert_eq!(lab.a, 80.399574);
+        assert_eq!(lab.b, -45.789467);
+    }
+
+    #[test]
+    fn xyz_to_lab_simple2() {
+        let xyz = Xyz { data: [1.0590637931500604, 0.840998318832299, 0.22137415400510363] };
+        let lab: Lab = xyz.into();
+        assert_eq!(lab.l, 7.596737);
+        assert_eq!(lab.a, 9.967141);
+        assert_eq!(lab.b, 9.931389);
     }
 }

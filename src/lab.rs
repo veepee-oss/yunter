@@ -1,4 +1,4 @@
-use num::Float;
+use num_traits::Float;
 use rgb::Rgb;
 use xyz::Xyz;
 
@@ -78,5 +78,65 @@ fn pivot_l_lab_xyz<T: Float>(l: T, y: T) -> T {
         y * y * y
     } else {
         l / kappa
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use lab::Lab;
+    use rgb::Rgb;
+    use xyz::Xyz;
+
+    #[test]
+    fn lab_to_xyz_simple() {
+        let lab = Lab { l: 46.97063877033799,
+                        a: 80.39955582611775,
+                        b: -45.78947040551107 };
+        let xyz: Xyz = lab.into();
+        assert_eq!(xyz.data[0], 33.113674);
+        assert_eq!(xyz.data[1], 15.997065);
+        assert_eq!(xyz.data[2], 50.057648);
+    }
+
+    #[test]
+    fn lab_to_xyz_simple3() {
+        let lab = Lab { l: 7.417381,
+                        a: 1.6188575,
+                        b: 5.2350793 };
+        let xyz: Xyz = lab.into();
+        assert_eq!(xyz.data[0], 0.8199973);
+        assert_eq!(xyz.data[1], 0.82114255);
+        assert_eq!(xyz.data[2], 0.52809083);
+    }
+
+    #[test]
+    fn lab_to_rgb_simple() {
+        let lab = Lab { l: 46.97063877033799, a: 80.39955582611775, b: -45.78947040551107 };
+        let rgb: Rgb = lab.into();
+        assert_eq!(rgb.data[0], 200);
+        assert_eq!(rgb.data[1], 0);
+        assert_eq!(rgb.data[2], 190);
+    }
+
+    #[test]
+    fn lab_to_rgb_simple2() {
+        let lab = Lab { l: 8.112699908516632,
+                        a: 12.557465203893239,
+                        b: 0.05391983803255673 };
+        let rgb: Rgb = lab.into();
+        assert_eq!(rgb.data[0], 39);
+        assert_eq!(rgb.data[1], 17);
+        assert_eq!(rgb.data[2], 24);
+    }
+
+    #[test]
+    fn lab_to_rgb_simple3() {
+        let lab = Lab { l: 7.417381,
+                        a: 1.6188575,
+                        b: 5.2350793 };
+        let rgb: Rgb = lab.into();
+        assert_eq!(rgb.data[0], 27);
+        assert_eq!(rgb.data[1], 21);
+        assert_eq!(rgb.data[2], 13);
     }
 }
