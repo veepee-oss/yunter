@@ -1,6 +1,13 @@
 [package]
 name = "yunter"
 version = "0.1.0"
+license = "MIT"
+description = "convert from one color-space to another"
+homepage = "https://github.com/vente-privee/yunter"
+documentation = "https://docs.rs/yunter"
+readme = "README.md"
+keywords = ["color", "convertion", "rgb", "xyz", "lab"]
+categories = ["multimedia::encoding"]
 authors = [
     "Maxime Legendre <mlegendre@vente-privee.com>",
     "Clément Renault <crenault@vente-privee.com>"
